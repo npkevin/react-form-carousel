@@ -30,7 +30,7 @@ export default class App extends Component {
         <Page>
           {Wrapped}
         </Page>
-        <Page>psave
+        <Page>
           <textarea name="description" id="desc" cols="30" rows="10" style={{resize: "none"}} >
 
           </textarea><br/>
