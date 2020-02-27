@@ -1,8 +1,27 @@
-/* add css styles here (optional) */
+.container {
+  width: 100%;
+}
 
-.test {
-  display: inline-block;
-  margin: 2em auto;
-  border: 2px solid #000;
-  font-size: 2em;
+.form {
+  width: inherit;
+  max-width: inherit;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  position: relative;
+  scroll-behavior: smooth;
+}
+
+.form__page {
+  box-sizing: border-box;
+  width: inherit;
+  max-width: inherit;
+  flex: 0 0 auto;
+  height: min-content;
+}
+
+.navKeys-container {
+  box-sizing: border-box;
+  width: inherit;
+  max-width: inherit;
 }

@@ -57,5 +57,9 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "classnames": "^2.2.6",
+    "smoothscroll-polyfill": "^0.4.4"
+  }
 }
