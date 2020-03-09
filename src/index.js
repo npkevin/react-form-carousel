@@ -3,14 +3,13 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import smoothscroll from 'smoothscroll-polyfill';
 
-import styles from './styles.css';
-import styles_default from './default-style.css';
+import styles from './styles.module.css';
+import styles_default from './default-style.module.css';
 
 smoothscroll.polyfill(); // enables smoothscroll for many browsers
 
 
-export default class CarouselForm extends Component {
-
+export default class Form extends Component {
   constructor(props) {
     super(props);
     this.resizeTimer = undefined;
@@ -28,6 +27,8 @@ export default class CarouselForm extends Component {
     this.setState({ height: this.heights[0] });
     window.addEventListener("resize", this.resizeHandler);
     document.querySelector("." + styles.container).addEventListener('keyup', this.tabScroll);
+
+    console.log(styles)
   }
 
   // Keep horizontal scroll on current page when resizing
@@ -74,7 +75,6 @@ export default class CarouselForm extends Component {
 
   // TODO: issue with pressing [shift+tab] -> registering as [shift+tab] and then [tab] immediately after
   tabScroll = (e) => {
-    if (!this.props.tabscrolling) return
     // tab (+shfit) scrolling
     if (e.key === "Tab" && !e.shiftKey) {
       if (this.currentPage != this.getCurrentPage()) this.scrollToPage(this.getCurrentPage("up"));
@@ -92,12 +92,12 @@ export default class CarouselForm extends Component {
 
     let containerStyle = classNames(
       styles.container,
-      !this.props.style ? styles_default.container : null,
+      !this.props.style ? styles_default.container : this.props.style.container,
     );
- 
+
     let fromStyle = classNames(
       styles.form,
-      !this.props.style ? styles_default.form : null
+      !this.props.style ? styles_default.form : this.props.style.form
     );
 
     return (
@@ -118,7 +118,7 @@ export default class CarouselForm extends Component {
                   uploadHeight: this.addPageHeight,
                 })
               }
-              throw new Error("Carousel Form only accepts Carousel.Page components")
+              throw new Error("Carousel Form only accepts Page components")
             })
           }
         </form>
@@ -132,7 +132,7 @@ export default class CarouselForm extends Component {
 
     let navKeyContainerStyle = classNames(
       styles['navKeys-container'],
-      !this.props.style ? styles_default['navKeys-container'] : null
+      !this.props.style ? styles_default['navKeys-container'] : this.props.style['navKeys-container']
     );
 
     return (
@@ -177,7 +177,7 @@ export class Page extends Component {
 
     let pageStyle = classNames(
       styles.form__page,
-      !this.props.style ? styles_default.form__page : null,
+      !this.props.style ? styles_default.form__page : this.props.style.form__page,
     );
 
     return (

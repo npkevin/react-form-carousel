@@ -1,21 +1,26 @@
 import React, { Component } from 'react'
-import CarouselForm, { Page } from 'react-form-carousel'
+import Form, { Page } from 'react-form-carousel'
+
+import customStyle from './customStyle.module.css'
 
 export default class App extends Component {
 
   // Handle form submit
   onSubmit = (e) => {
     e.preventDefault();
-    console.log("Submit!");
+    alert(this.state);
   }
 
   render() {
+
+    console.log("App: " + customStyle)
+
     return (
-      <CarouselForm
+      <Form
         onSubmit={this.onSubmit}
+        style={customStyle}
         resizeDelay={0}
         navkeys
-        // tabscrolling
       >
         <Page>
           <button type="button" >Red</button>
@@ -40,7 +45,7 @@ export default class App extends Component {
             <option value="2">2</option>
           </select>
         </Page>
-      </CarouselForm>
+      </Form>
     )
   }
 }
