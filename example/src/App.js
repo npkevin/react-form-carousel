@@ -1,48 +1,63 @@
 import React, { Component } from 'react'
 import Form, { Page } from 'react-form-carousel'
 
-import customStyle from './customStyle.module.css'
+import "./styles.css"
 
 export default class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: "red",
+      text: "",
+      number: 2,
+    }
+  }
 
   // Handle form submit
   onSubmit = (e) => {
     e.preventDefault();
-    alert(this.state);
+    console.log(this.state);
   }
 
   render() {
-
-    console.log("App: " + customStyle)
-
     return (
       <Form
         onSubmit={this.onSubmit}
-        style={customStyle}
-        resizeDelay={0}
-        navkeys
+        resizeDelay={200}
+        navigation
+        autoHeight
+        // removeDefaultStyle
       >
         <Page>
-          <button type="button" >Red</button>
-          <button type="button" >Blue</button>
+          <button type="button" onClick={() => this.setState({ color: "red" })}>Red</button>
+          <button type="button" onClick={() => this.setState({ color: "blue" })}>Blue</button>
           <br />
-          <button type="button" >Green</button>
-          <button type="button" >Orange</button>
+          <button type="button" onClick={() => this.setState({ color: "green" })}>Green</button>
+          <button type="button" onClick={() => this.setState({ color: "orange" })}>Orange</button>
           <br />
-          <button type="button" >Pink</button>
-          <button type="button" >Yellow</button>
+          <button type="button" onClick={() => this.setState({ color: "pink" })}>Pink</button>
+          <button type="button" onClick={() => this.setState({ color: "yellow" })}>Yellow</button>
         </Page>
         <Page>
           {Wrapped}
         </Page>
         <Page>
-          <textarea name="description" id="desc" cols="30" rows="10" style={{resize: "none"}} >
-
-          </textarea><br/>
-          <select name="sel" id="sel" >
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
+          <textarea
+            name="description"
+            id="desc"
+            cols="30"
+            rows="10"
+            style={{ resize: "none" }}
+            value={this.state.text}
+            onChange={e => this.setState({ text: e.target.value })}
+          />
+        </Page>
+        <Page>
+          <select defaultValue={this.state.number} onChange={e => this.setState({ number: e.target.value })}>
+            <option value="0">Zero</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
           </select>
         </Page>
       </Form>

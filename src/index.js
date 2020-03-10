@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types'
-import classNames from 'classnames';
 import smoothscroll from 'smoothscroll-polyfill';
+import classNames from 'classnames';
 
-import styles from './styles.module.css';
-import styles_default from './default-style.module.css';
+import style from './style.module.css';
+import defaultStyle from './default-style.module.css';
 
 smoothscroll.polyfill(); // enables smoothscroll for many browsers
 
@@ -15,6 +14,7 @@ export default class Form extends Component {
     this.resizeTimer = undefined;
     this.currentPage = 0;
     this.formRef = React.createRef();
+    this.form = React.createRef();
     this.heights = {};
     this.state = {
       height: 0
@@ -26,9 +26,7 @@ export default class Form extends Component {
     this.currentPage = this.getCurrentPage("down");
     this.setState({ height: this.heights[0] });
     window.addEventListener("resize", this.resizeHandler);
-    document.querySelector("." + styles.container).addEventListener('keyup', this.tabScroll);
-
-    console.log(styles)
+    document.querySelector(".form-carousel__container").addEventListener('keyup', this.tabScroll);
   }
 
   // Keep horizontal scroll on current page when resizing
@@ -69,7 +67,7 @@ export default class Form extends Component {
       // update height
       setTimeout(() => {
         this.setState({ height: this.heights[this.currentPage.toString()] });
-      }, !!this.props.resizeDelay ? this.props.resizeDelay : 0); // default delay is 0.6s
+      }, this.props.resizeDelay >= 0  ? this.props.resizeDelay : 600); // default delay is 0.6s
     }
   }
 
@@ -91,14 +89,21 @@ export default class Form extends Component {
     let NavKeys = this.navKeys;
 
     let containerStyle = classNames(
-      styles.container,
-      !this.props.style ? styles_default.container : this.props.style.container,
+      "form-carousel__container",
+      style.container,
+      this.props.removeDefaultStyle ? null : defaultStyle.container,
     );
 
-    let fromStyle = classNames(
-      styles.form,
-      !this.props.style ? styles_default.form : this.props.style.form
-    );
+    let formStyle = classNames(
+      'form-carousel__form',
+      style.form,
+      this.props.removeDefaultStyle ? null : defaultStyle.form,
+    )
+
+    let formInlineStyle = {
+      height: this.state.height && this.props.autoHeight > 0 ? this.state.height : "initial",
+      ...(this.props.style ? this.props.style : {}),
+    }
 
     return (
       <div className={containerStyle}>
@@ -106,8 +111,8 @@ export default class Form extends Component {
           onSubmit={!!this.props.onSubmit ? this.props.onSubmit : null}
           action={!!this.props.action ? this.props.action : null}
           method={!!this.props.method ? this.props.action : null}
-          className={fromStyle}
-          style={this.state.height > 0 ? { height: this.state.height } : { height: "initial" }}
+          className={formStyle}
+          style={formInlineStyle}
           ref={this.formRef}
         >
           { /* Only accept Page class */
@@ -128,16 +133,17 @@ export default class Form extends Component {
   }
 
   navKeys = () => {
-    if (!this.props.navkeys) return null
+    if (!this.props.navigation) return null
 
-    let navKeyContainerStyle = classNames(
-      styles['navKeys-container'],
-      !this.props.style ? styles_default['navKeys-container'] : this.props.style['navKeys-container']
+    let navStyle = classNames(
+      'form-carousel__nav-container',
+      style.navcontainer,
+      this.props.removeDefaultStyle ? null : defaultStyle.navcontainer,
     );
 
     return (
-      <div className={navKeyContainerStyle}>
-        <button type="button" className={this.currentPage <= 0 ? styles_default.hide : null} onClick={this.prevPage} disabled={this.currentPage <= 0}>Prev</button>
+      <div className={navStyle}>
+        <button type="button" className={this.currentPage <= 0 ? classNames('hide', this.state.removeDefaultStyle ? null : defaultStyle.hide) : null} onClick={this.prevPage} disabled={this.currentPage <= 0}>Prev</button>
         <button
           type="button"
           onClick={this.currentPage >= this.lastPage ? this.props.onSubmit : this.nextPage}>
@@ -153,8 +159,6 @@ export class Page extends Component {
   constructor(props) {
     super(props);
     this.pageRef = React.createRef();
-    this.state = {
-    }
   }
 
   componentDidMount = () => {
@@ -175,13 +179,14 @@ export class Page extends Component {
 
   render = () => {
 
-    let pageStyle = classNames(
-      styles.form__page,
-      !this.props.style ? styles_default.form__page : this.props.style.form__page,
-    );
+    let formPageStyle = classNames(
+      'form-carousel__page',
+      style.form__page,
+      this.props.removeDefaultStyle ? null : defaultStyle.form__page,
+    )
 
     return (
-      <div className={pageStyle} ref={this.pageRef} >
+      <div className={formPageStyle} ref={this.pageRef} style={this.props.style ? this.props.style : {}} >
         {this.props.children}
       </div>
     )
