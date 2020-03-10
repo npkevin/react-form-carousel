@@ -1,4 +1,4 @@
-# react-form-carousel [WIP]
+# react-form-carousel
 
 > Easy-to-use and customizable react component to create mobile-friendly carousel forms.
 > Still very much a work-in-progress. Not currently published.
@@ -7,7 +7,7 @@
 
 ### [See Demo]()
 
-## Install
+## Install (not published)
 
 ```bash
 npm install --save react-form-carousel
@@ -16,72 +16,124 @@ npm install --save react-form-carousel
 ## Usage
 
 ```jsx
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import Form, { Page } from 'react-form-carousel'
 
-import CarouselForm, { Page } from 'react-form-carousel'
+// Custom styling
+import "./styles.css"
 
-class Example extends Component {
+export default class App extends Component {
 
-    // Handle form submit
+  // Handle form submit
   onSubmit = (e) => {
     e.preventDefault();
-    console.log("Submit!");
+    // Handle submit
   }
 
-  render () {
+  render() {
     return (
-      <CarouselForm
-        onSubmit={this.onSubmit}
-        resizeDelay={0}
-        navkeys
-        tabscrolling
-      >
+      <Form onSubmit={this.onSubmit} navigation autoHeight >
         <Page>
-          <button type="button" >Red</button>
-          <button type="button" >Blue</button>
-          <br />
-          <button type="button" >Green</button>
-          <button type="button" >Orange</button>
-          <br />
-          <button type="button" >Pink</button>
-          <button type="button" >Yellow</button>
+          <label>Color:</label><br/>
+          <button type="button" onClick={() => this.setState({ color: "red" })}>Red</button>
+          <button type="button" onClick={() => this.setState({ color: "blue" })}>Blue</button>
         </Page>
         <Page>
           {Wrapped}
         </Page>
-        <Page>
-          <textarea name="description" id="desc" cols="30" rows="10" style={{resize: "none"}} >
-
-          </textarea><br/>
-          <select name="sel" id="sel" >
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </Page>
-      </CarouselForm>
+      </Form>
     )
   }
 }
 
-
 let Wrapped =
-  <div style={{ textAlign: "center" }}>
-    <div>
-      <label htmlFor="firstname">First Name</label><br />
-      <input type="text" id="firstname" />
-    </div>
-    <div>
-      <label htmlFor="lastname">Last Name</label><br />
-      <input type="text" id="lastname" />
-    </div>
-    <div>
-      <label htmlFor="email">Email</label><br />
-      <input type="email" id="email" />
-    </div>
-  </div >
+  <Fragment>
+    <label>Size: </label><br/>
+    <label>SM </label><input type="radio" name="size" id="sm"/><br/>
+    <label>MD </label><input type="radio" name="size" id="md"/>
+    <label>LG </label><input type="radio" name="size" id="lg"/><br/>
+  </Fragment >
+```
+#### Form Attributes
+|               Attribute                 |                                         Description                                        |
+| --------------------------------------- | ------------------------------------------------------------------------------------------ |
+| onSubmit                                | Function to be called when form is submitted                                               |
+| style                                   | In-line styling for form element                                                           |
+| removeDefaultStyle<br>(default: false)  | Setting this attribute to true will  remove the as much of the default styling as possible |
+| resizeDelay<br>(default: 600)           | Delay in milliseconds to wait before resizing (height) of the form                         |
+| autoHeight<br>(default: false)          | Setting autoHeight to true will resize (height) of the form when browsing through Pages, otherwise it will fit to the largest (height) Page |
+| navigation<br>(default: true)           | false removes the 'prev' and 'next/submit' buttons                                         |
+
+#### Page Attributes
+|               Attribute                |                                         Description                                        |
+| -------------------------------------- | ------------------------------------------------------------------------------------------ |
+| style                                  | In-line styling for form                                                                   |
+| removeDefaultStyle<br>(default: false) | Setting this attribute to true will  remove the as much of the default styling as possible |
+
+### Styling
+
+This is the default styling (in comments). Edit this stylesheet or use the attribute **_style_** for inline styling and/or **_removeDefaultStyle_** to remove the default style.
+```css
+
+/* style.css
+<div.form-carousel__container>
+    <div.form-carousel>
+        <div.form-carousel__page>
+            Content
+        </div.form-carousel__page>
+        ...
+        <div.form-carousel__page>
+            Content
+        </div.form-carousel__page>
+    </div.form-carousel>
+    <div.form-carousel__nav-container>
+        <button(.hide)>Prev</button>
+        <button>Next<button/>
+    </div.form-carousel__nav-container>
+</div.form-carousel__container>
+ */
+
+
+.form-carousel__container {
+  /*
+  border: 1px solid black;
+  */
+}
+
+.form-carousel {
+  /*
+  transition: height 0.6s;
+  */
+}
+
+.form-carousel__page {
+  /*
+  padding: 10px;
+  text-align: center;
+  */
+}
+
+.form-carousel__nav-container {
+  /* 
+  padding: 10px;
+  padding-top: 0;
+  text-align: center;
+  */
+}
+
+.form-carousel__nav-container button {
+  /*
+  padding: 2px 5px;
+  margin: 0 5px;
+  width: 100px;
+} */
+}
+
+.form-carousel__nav-container button.hide {
+}
 
 ```
+
 
 ## License
 

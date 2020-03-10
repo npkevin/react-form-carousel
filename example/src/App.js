@@ -23,10 +23,8 @@ export default class App extends Component {
   render() {
     return (
       <Form
-        as="div"
         onSubmit={this.onSubmit}
         resizeDelay={200}
-        navigation
         autoHeight
         // removeDefaultStyle
       >

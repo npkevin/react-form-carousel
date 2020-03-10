@@ -16,7 +16,7 @@ export default class Form extends Component {
     this.formRef = React.createRef();
     this.heights = {};
     this.state = {
-      height: 0
+      height: 0,
     };
   }
 
@@ -151,6 +151,13 @@ export default class Form extends Component {
       </div>
     )
   }
+}
+
+Form.defaultProps = {
+  removeDefaultStyle: false,
+  resizeDelay: 600,
+  autoHeight: false,
+  navigation: true,
 }
 
 // Form Page
