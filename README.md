@@ -7,7 +7,7 @@
 
 ### [See Demo]()
 
-## Install (not published)
+## Install
 
 ```bash
 npm install --save react-form-carousel
