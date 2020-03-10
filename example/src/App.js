@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import Form, { Page } from 'react-form-carousel'
 
 import "./styles.css"
@@ -23,6 +23,7 @@ export default class App extends Component {
   render() {
     return (
       <Form
+        as="div"
         onSubmit={this.onSubmit}
         resizeDelay={200}
         navigation
@@ -30,6 +31,7 @@ export default class App extends Component {
         // removeDefaultStyle
       >
         <Page>
+          <label>Color:</label><br/>
           <button type="button" onClick={() => this.setState({ color: "red" })}>Red</button>
           <button type="button" onClick={() => this.setState({ color: "blue" })}>Blue</button>
           <br />
@@ -43,17 +45,19 @@ export default class App extends Component {
           {Wrapped}
         </Page>
         <Page>
+          <label>Text:</label><br/>
           <textarea
             name="description"
             id="desc"
-            cols="30"
-            rows="10"
+            cols="40"
+            rows="5"
             style={{ resize: "none" }}
             value={this.state.text}
             onChange={e => this.setState({ text: e.target.value })}
           />
         </Page>
         <Page>
+          <label>Number: </label><br/>
           <select defaultValue={this.state.number} onChange={e => this.setState({ number: e.target.value })}>
             <option value="0">Zero</option>
             <option value="1">One</option>
@@ -66,17 +70,11 @@ export default class App extends Component {
 }
 
 let Wrapped =
-  <div style={{ textAlign: "center" }}>
-    <div>
-      <label htmlFor="firstname">First Name</label><br />
-      <input type="text" id="firstname" />
-    </div>
-    <div>
-      <label htmlFor="lastname">Last Name</label><br />
-      <input type="text" id="lastname" />
-    </div>
-    <div>
-      <label htmlFor="email">Email</label><br />
-      <input type="email" id="email" />
-    </div>
-  </div >
+  <Fragment>
+    <label>Size: </label><br/>
+    <label>XS </label><input type="radio" name="size" id="xs"/>
+    <label>SM </label><input type="radio" name="size" id="sm"/><br/>
+    <label>MD </label><input type="radio" name="size" id="md"/>
+    <label>LG </label><input type="radio" name="size" id="lg"/><br/>
+    <label>XL </label><input type="radio" name="size" id="xl"/>
+  </Fragment >

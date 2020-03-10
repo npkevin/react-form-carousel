@@ -14,7 +14,6 @@ export default class Form extends Component {
     this.resizeTimer = undefined;
     this.currentPage = 0;
     this.formRef = React.createRef();
-    this.form = React.createRef();
     this.heights = {};
     this.state = {
       height: 0
