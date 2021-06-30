@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Helmet } from 'react-helmet';
 import smoothscroll from 'smoothscroll-polyfill';
 import classNames from 'classnames';
 
@@ -12,11 +13,13 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.resizeTimer = undefined;
-    this.currentPage = 0;
     this.formRef = React.createRef();
     this.heights = {};
     this.state = {
       height: 0,
+      curPageTitle: document.getElementsByTagName("title")[0],
+      pageTitles: props.pageTitles,
+      pageNumber: 0
     };
   }
 
@@ -80,8 +83,27 @@ export default class Form extends Component {
     }
   }
 
-  prevPage = () => this.scrollToPage(this.currentPage - 1);
-  nextPage = () => this.scrollToPage(this.currentPage + 1);
+  updatePageTitle(pageTitle) {
+    document.title = pageTitle;
+  }
+
+  prevPage = (event) => {
+    this.scrollToPage(this.currentPage - 1);
+    this.setState({
+      pageNumber: (this.state.pageNumber >= 0 ? 0 : this.state.pageNumber - 1)
+    }, this.updatePageTitle(this.state.pageTitles[this.state.pageNumber]));
+    this.props.handlePrev(event);
+  }
+
+  nextPage = (event, pageTitle) => {
+    this.scrollToPage(this.currentPage + 1);
+    
+    this.setState({
+      pageNumber: (this.state.pageNumber >= this.state.pageTitles.length ? this.state.pageNumber + 1 : this.state.pageNumber
+    }, this.updatePageTitle(this.state.pageTitles[this.state.pageNumber]));
+
+    this.props.handleNext(event);
+  }
 
   render = () => {
 
@@ -114,8 +136,9 @@ export default class Form extends Component {
           style={formInlineStyle}
           ref={this.formRef}
         >
+
           { /* Only accept Page class */
-            this.props.children.map(child => {
+            this.props.children.map((child) => {
               if (child.type.name === Page.name) {
                 return React.cloneElement(child, {
                   currentPage: this.current,
@@ -142,10 +165,24 @@ export default class Form extends Component {
 
     return (
       <div className={navStyle}>
-        <button type="button" className={this.currentPage <= 0 ? classNames('hide', this.state.removeDefaultStyle ? null : defaultStyle.hide) : null} onClick={this.prevPage} disabled={this.currentPage <= 0}>Prev</button>
+        <button 
+          type="button"
+          id={"previous-button-" + this.state.pageNumber}
+          value={"previous-button-" + this.state.pageNumber}
+          className={
+            this.currentPage <= 0 ? classNames('hide', this.state.removeDefaultStyle ? null : defaultStyle.hide) : null
+            } 
+          onClick={this.prevPage} 
+          disabled={this.currentPage <= 0}>Prev</button>
+
         <button
           type="button"
-          onClick={this.currentPage >= this.lastPage ? this.props.onSubmit : this.nextPage}>
+          id={this.currentPage >= this.lastPage ? "submit-button" : "next-button-" + this.state.pageNumber}
+          onClick={
+            this.currentPage >= this.lastPage ? this.props.onSubmit : this.nextPage
+          }
+          value={this.currentPage >= this.lastPage ? "submit" : "next"}
+          >
           {this.currentPage >= this.lastPage ? "Submit" : "Next"}
         </button>
       </div>
@@ -157,7 +194,7 @@ Form.defaultProps = {
   removeDefaultStyle: false,
   resizeDelay: 600,
   autoHeight: false,
-  navigation: true,
+  navigation: true
 }
 
 // Form Page
@@ -165,6 +202,9 @@ export class Page extends Component {
   constructor(props) {
     super(props);
     this.pageRef = React.createRef();
+    this.state = {
+      pageTitle: props.pageName
+    }
   }
 
   componentDidMount = () => {

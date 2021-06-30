@@ -14,6 +14,12 @@ export default class App extends Component {
     }
   }
 
+  handleClick = (event) => {
+    console.log("test");
+    console.log(event.target.id);
+    console.log(event.target.value);
+  }
+
   // Handle form submit
   onSubmit = (e) => {
     e.preventDefault();
@@ -26,6 +32,9 @@ export default class App extends Component {
         onSubmit={this.onSubmit}
         resizeDelay={200}
         autoHeight
+        pageTitles={["test1", "test2", "test3", "test4"]}
+        handlePrev={this.handleClick}
+        handleNext={this.handleClick}
         // removeDefaultStyle
       >
         <Page>
