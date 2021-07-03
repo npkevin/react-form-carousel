@@ -37,7 +37,7 @@ export default class App extends Component {
         handleNext={this.handleClick}
         // removeDefaultStyle
       >
-        <Page>
+        <Page pageTitle="test1">
           <label>Color:</label><br/>
           <button type="button" onClick={() => this.setState({ color: "red" })}>Red</button>
           <button type="button" onClick={() => this.setState({ color: "blue" })}>Blue</button>
@@ -48,10 +48,10 @@ export default class App extends Component {
           <button type="button" onClick={() => this.setState({ color: "pink" })}>Pink</button>
           <button type="button" onClick={() => this.setState({ color: "yellow" })}>Yellow</button>
         </Page>
-        <Page>
+        <Page pageTitle="test2">
           {Wrapped}
         </Page>
-        <Page>
+        <Page pageTitle="test3">
           <label>Text:</label><br/>
           <textarea
             name="description"
@@ -63,7 +63,7 @@ export default class App extends Component {
             onChange={e => this.setState({ text: e.target.value })}
           />
         </Page>
-        <Page>
+        <Page pageTitle="test4">
           <label>Number: </label><br/>
           <select defaultValue={this.state.number} onChange={e => this.setState({ number: e.target.value })}>
             <option value="0">Zero</option>
