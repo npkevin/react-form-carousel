@@ -55,20 +55,23 @@ let Wrapped =
   </Fragment >
 ```
 #### Form Attributes
-|               Attribute                 |                                         Description                                        |
-| --------------------------------------- | ------------------------------------------------------------------------------------------ |
-| onSubmit                                | Function to be called when form is submitted                                               |
-| style                                   | In-line styling for form element                                                           |
-| removeDefaultStyle<br>(default: false)  | Setting this attribute to true will  remove the as much of the default styling as possible |
-| resizeDelay<br>(default: 600)           | Delay in milliseconds to wait before resizing (height) of the form                         |
-| autoHeight<br>(default: false)          | Setting autoHeight to true will resize (height) of the form when browsing through Pages, otherwise it will fit to the largest (height) Page |
-| navigation<br>(default: true)           | false removes the 'prev' and 'next/submit' buttons                                         |
+| Attribute                              | Description                                                                                                                                 |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| onSubmit                               | Function to be called when form is submitted                                                                                                |
+| style                                  | In-line styling for form element                                                                                                            |
+| removeDefaultStyle<br>(default: false) | Setting this attribute to true will  remove the as much of the default styling as possible                                                  |
+| resizeDelay<br>(default: 600)          | Delay in milliseconds to wait before resizing (height) of the form                                                                          |
+| autoHeight<br>(default: false)         | Setting autoHeight to true will resize (height) of the form when browsing through Pages, otherwise it will fit to the largest (height) Page |
+| navigation<br>(default: true)          | false removes the 'prev' and 'next/submit' buttons                                                                                          |
+| handlePrev                             | onClick event from the "previous" button                                                                                                   |
+| handleNext                                       | onClick event from the "next" button                                                                                                                            |
 
 #### Page Attributes
-|               Attribute                |                                         Description                                        |
+| Attribute                              | Description                                                                                |
 | -------------------------------------- | ------------------------------------------------------------------------------------------ |
 | style                                  | In-line styling for form                                                                   |
 | removeDefaultStyle<br>(default: false) | Setting this attribute to true will  remove the as much of the default styling as possible |
+| pageTitle                              | Controls the title of the page, updates as the user goes through form                      |
 
 ### Styling
 
@@ -138,3 +141,6 @@ This is the default styling (in comments). Edit this stylesheet or use the attri
 ## License
 
 MIT © [npkevin](https://github.com/npkevin)
+
+
+<!-- TODO: Update README, with new properties added to Page component and handlePrev/handleNext -->

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Helmet } from 'react-helmet';
 import smoothscroll from 'smoothscroll-polyfill';
 import classNames from 'classnames';
 
@@ -12,18 +13,27 @@ export default class Form extends Component {
   constructor(props) {
     super(props);
     this.resizeTimer = undefined;
-    this.currentPage = 0;
     this.formRef = React.createRef();
+    this.pageTitles = new Array();
     this.heights = {};
     this.state = {
       height: 0,
+      pageTitle: '',
     };
+  }
+
+  componentDidUpdate = () => {
+    document.title = this.state.pageTitle;
   }
 
   componentDidMount = () => {
     this.lastPage = this.getPageLength() - 1; //-1 for indexing
     this.currentPage = this.getCurrentPage("down");
-    this.setState({ height: this.heights[0] });
+    this.setState({ 
+      height: this.heights[0],
+      pageTitle: this.pageTitles[this.currentPage]
+    });
+
     window.addEventListener("resize", this.resizeHandler);
     document.querySelector(".form-carousel__container").addEventListener('keyup', this.tabScroll);
   }
@@ -58,11 +68,12 @@ export default class Form extends Component {
     if (page <= this.lastPage && page >= 0) {
       // update currentPage & scroll
       this.currentPage = page;
-      this.setState({});
+
       this.formRef.current.scrollTo({
         behavior: 'smooth',
         left: page * (this.formRef.current.offsetWidth),
       })
+
       // update height
       setTimeout(() => {
         this.setState({ height: this.heights[this.currentPage.toString()] });
@@ -79,9 +90,31 @@ export default class Form extends Component {
       if (this.currentPage != this.getCurrentPage()) this.scrollToPage(this.getCurrentPage("down"));
     }
   }
+  
+  updatePageTitle(pageTitle) {
 
-  prevPage = () => this.scrollToPage(this.currentPage - 1);
-  nextPage = () => this.scrollToPage(this.currentPage + 1);
+    this.setState({
+      pageTitle: pageTitle
+    });
+  }
+
+  // Expanded this to control event handling outside of component
+  prevPage = (event) => {
+    this.scrollToPage(this.currentPage - 1);
+
+    this.updatePageTitle(this.pageTitles[this.currentPage]);
+
+    this.props.handlePrev(event);
+  }
+
+  // Expanded this to control event handling outside of component
+  nextPage = (event, pageTitle) => {
+    this.scrollToPage(this.currentPage + 1);
+
+    this.updatePageTitle(this.pageTitles[this.currentPage]);
+    
+    this.props.handleNext(event);
+  }
 
   render = () => {
 
@@ -114,13 +147,28 @@ export default class Form extends Component {
           style={formInlineStyle}
           ref={this.formRef}
         >
+
           { /* Only accept Page class */
-            this.props.children.map(child => {
+            this.props.children.map((child, index) => {
               if (child.type.name === Page.name) {
-                return React.cloneElement(child, {
-                  currentPage: this.current,
-                  uploadHeight: this.addPageHeight,
-                })
+
+                // Passing back reference to the page titles
+                // Creating an array of page titles
+                  return React.cloneElement(child, {
+                    currentPage: this.current,
+                    key: index,
+                    ref: node => {
+
+                        if (node != null) this.pageTitles.push(node.state.pageTitle);
+
+                        const { ref } = child
+
+                        if (typeof ref === 'function') ref(node)
+                        else if (ref) ref.current = node
+                    },
+                    uploadHeight: this.addPageHeight
+                  })
+  
               }
               throw new Error("Carousel Form only accepts Page components")
             })
@@ -142,10 +190,24 @@ export default class Form extends Component {
 
     return (
       <div className={navStyle}>
-        <button type="button" className={this.currentPage <= 0 ? classNames('hide', this.state.removeDefaultStyle ? null : defaultStyle.hide) : null} onClick={this.prevPage} disabled={this.currentPage <= 0}>Prev</button>
+        <button 
+          type="button"
+          id={"previous-button-" + this.currentPage}
+          value={"previous-button-" + this.currentPage}
+          className={
+            this.currentPage <= 0 ? classNames('hide', this.state.removeDefaultStyle ? null : defaultStyle.hide) : null
+            } 
+          onClick={this.prevPage} 
+          disabled={this.currentPage <= 0}>Prev</button>
+
         <button
           type="button"
-          onClick={this.currentPage >= this.lastPage ? this.props.onSubmit : this.nextPage}>
+          id={this.currentPage >= this.lastPage ? "submit-button" : "next-button-" + this.currentPage}
+          onClick={
+            this.currentPage >= this.lastPage ? this.props.onSubmit : this.nextPage
+          }
+          value={this.currentPage >= this.lastPage ? "submit" : "next"}
+          >
           {this.currentPage >= this.lastPage ? "Submit" : "Next"}
         </button>
       </div>
@@ -157,7 +219,7 @@ Form.defaultProps = {
   removeDefaultStyle: false,
   resizeDelay: 600,
   autoHeight: false,
-  navigation: true,
+  navigation: true
 }
 
 // Form Page
@@ -165,6 +227,9 @@ export class Page extends Component {
   constructor(props) {
     super(props);
     this.pageRef = React.createRef();
+    this.state = {
+      pageTitle: props.pageTitle
+    }
   }
 
   componentDidMount = () => {
@@ -192,7 +257,10 @@ export class Page extends Component {
     )
 
     return (
-      <div className={formPageStyle} ref={this.pageRef} style={this.props.style ? this.props.style : {}} >
+      <div 
+        className={formPageStyle}
+        ref={this.pageRef}
+        style={this.props.style ? this.props.style : {}}>
         {this.props.children}
       </div>
     )
